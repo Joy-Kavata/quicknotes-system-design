@@ -123,7 +123,6 @@ async function handleFormSubmit(event) {
         renderNotes([result, ...existingNotes]);
         setStatus(`Note created (status 201, id ${result.id || 101}).`, "success");
         
-        // Reset form inputs
         noteForm.reset();
     } catch (error) {
         setStatus("Failed to create note. Please try again.", "error");
@@ -138,7 +137,12 @@ async function deleteNote(id, listItemElement) {
     setStatus("Deleting note...", "loading");
 
     try {
-        
+        /* 
+          Note on JSONPlaceholder: 
+          JSONPlaceholder simulates deletion successfully (returning status 200/204), 
+          but it does not persistently modify or delete records on their remote server. 
+          We handle this gracefully by removing the element instantly from the local DOM.
+        */
         await request(`${API_URL}/${id}`, {
             method: "DELETE"
         });
